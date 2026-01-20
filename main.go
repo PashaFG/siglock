@@ -9,7 +9,7 @@ import (
 	"syscall"
 )
 
-const lockFile = "/tmp/siglock.lock"
+var lockFilePath = "/tmp/siglock.lock"
 
 func isProcessAlive(pid int) bool {
 	if pid <= 0 {
@@ -21,7 +21,7 @@ func isProcessAlive(pid int) bool {
 }
 
 func readLockPID() int {
-	data, err := os.ReadFile(lockFile)
+	data, err := os.ReadFile(lockFilePath)
 	if err != nil {
 		return 0
 	}
@@ -35,11 +35,11 @@ func readLockPID() int {
 }
 
 func writeLockPID() error {
-	return os.WriteFile(lockFile, []byte(strconv.Itoa(os.Getpid())), 0644)
+	return os.WriteFile(lockFilePath, []byte(strconv.Itoa(os.Getpid())), 0644)
 }
 
 func removeLock() {
-	_ = os.Remove(lockFile)
+	_ = os.Remove(lockFilePath)
 }
 
 func setupCleanup() {
@@ -147,6 +147,5 @@ func printUsage() {
 	fmt.Fprintln(os.Stderr, `Usage: siglock {sign|status|unlock}
 sign   — run codesign with mutual exclusion
 status — check if signing is currently blocked
-unlock — force-remove lock (use if stuck)
-`)
+unlock — force-remove lock (use if stuck)`)
 }
