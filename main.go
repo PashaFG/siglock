@@ -9,7 +9,7 @@ import (
 	"syscall"
 )
 
-const lockFile = "/tmp/soglock.tmp"
+const lockFile = "/tmp/siglock.lock"
 
 func isProcessAlive(pid int) bool {
 	if pid <= 0 {
